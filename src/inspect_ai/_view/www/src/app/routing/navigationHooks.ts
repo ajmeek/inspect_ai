@@ -1,13 +1,13 @@
 import { useCallback } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useFilteredSamples } from "../../state/hooks";
 import { useStore } from "../../state/store";
 import { directoryRelativeUrl } from "../../utils/uri";
-import { logUrl, logUrlRaw, sampleUrl } from "./url";
+import { logUrl, logUrlRaw, sampleUrl, useDecodedParams } from "./url";
 
 export const useLogNavigation = () => {
   const navigate = useNavigate();
-  const { logPath } = useParams<{ logPath: string }>();
+  const { logPath } = useDecodedParams<{ logPath: string }>();
   const logs = useStore((state) => state.logs.logs);
   const loadedLog = useStore((state) => state.log.loadedLog);
 
@@ -33,7 +33,7 @@ export const useLogNavigation = () => {
 };
 
 export const useSampleUrl = () => {
-  const { logPath, tabId, sampleTabId } = useParams<{
+  const { logPath, tabId, sampleTabId } = useDecodedParams<{
     logPath?: string;
     tabId?: string;
     sampleTabId?: string;
@@ -93,7 +93,7 @@ export const useSampleNavigation = () => {
   const logDirectory = useStore((state) => state.logs.logs.log_dir);
 
   // The log
-  const { logPath, tabId, sampleTabId } = useParams<{
+  const { logPath, tabId, sampleTabId } = useDecodedParams<{
     logPath?: string;
     tabId?: string;
     sampleTabId?: string;

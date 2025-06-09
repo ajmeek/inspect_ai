@@ -51194,6 +51194,18 @@ categories: ${categories.join(" ")}`;
       );
       const logHeaders = useStore((state) => state.logs.logHeaders);
       const sortingRef = reactExports.useRef(sorting);
+      const loadingHeadersRef = reactExports.useRef(false);
+      const maybeLoadAllHeaders = reactExports.useCallback(async () => {
+        if (loadingHeadersRef.current) {
+          return;
+        }
+        loadingHeadersRef.current = true;
+        try {
+          await loadAllHeaders();
+        } finally {
+          loadingHeadersRef.current = false;
+        }
+      }, [loadAllHeaders]);
       reactExports.useEffect(() => {
         sortingRef.current = sorting;
       }, [sorting]);
@@ -51227,19 +51239,18 @@ categories: ${categories.join(" ")}`;
         },
         rowCount: items.length,
         onSortingChange: async (updater) => {
-          await loadAllHeaders();
+          await maybeLoadAllHeaders();
           setSorting(
             typeof updater === "function" ? updater(sorting || []) : updater
           );
         },
         onColumnFiltersChange: async (updater) => {
-          await loadAllHeaders();
+          await maybeLoadAllHeaders();
           setFiltering(
             typeof updater === "function" ? updater(filtering || []) : updater
           );
         },
-        onGlobalFilterChange: async (updater) => {
-          await loadAllHeaders();
+        onGlobalFilterChange: (updater) => {
           setGlobalFilter(
             typeof updater === "function" ? updater(globalFilter || "") : updater
           );
@@ -51258,6 +51269,11 @@ categories: ${categories.join(" ")}`;
         const filteredRowCount = table2.getFilteredRowModel().rows.length;
         setFilteredCount(filteredRowCount);
       }, [table2.getFilteredRowModel().rows.length, setFilteredCount]);
+      reactExports.useEffect(() => {
+        if (globalFilter && globalFilter.trim()) {
+          maybeLoadAllHeaders();
+        }
+      }, [globalFilter, maybeLoadAllHeaders]);
       reactExports.useEffect(() => {
         const exec2 = async () => {
           const currentPageRows = table2.getRowModel().rows;

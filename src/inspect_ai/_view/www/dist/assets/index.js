@@ -51263,7 +51263,8 @@ categories: ${categories.join(" ")}`;
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        enableColumnResizing: true
+        enableColumnResizing: true,
+        autoResetPageIndex: false
       });
       reactExports.useEffect(() => {
         const filteredRowCount = table2.getFilteredRowModel().rows.length;

@@ -91362,7 +91362,7 @@ Supported expressions:
             {
               index: true,
               // This will match exactly the "/" path
-              element: /* @__PURE__ */ jsxRuntimeExports.jsx(LogViewContainer, {})
+              element: /* @__PURE__ */ jsxRuntimeExports.jsx(LogsPanel, {})
             },
             {
               path: kLogsRoutUrlPattern,
